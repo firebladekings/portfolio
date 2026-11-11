@@ -1,43 +1,33 @@
-import Nav from './components/Nav'
 import Section from './components/Section'
 import Contact from './components/Contact'
-import { profile, about, software, tracks, experience } from './data'
+import About from './components/About'
+import Hero from './hero/Hero'
+import { SCROLL } from './hero/config'
+import { profile, software, tracks, experience } from './data'
 
 export default function App() {
   return (
     <>
-      <Nav />
-
       <main id="top">
-        {/* Hero */}
-        <section className="min-h-screen w-full flex flex-col justify-center items-center px-4 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(57,255,20,0.06)_0%,transparent_60%)]" />
-          <h1 className="relative text-4xl md:text-7xl font-black tracking-tighter text-white uppercase text-center">
-            {profile.name}
-          </h1>
-          <p className="relative text-xs tracking-[0.4em] text-neon font-bold uppercase mt-4 text-center">
-            [ {profile.tagline} ]
-          </p>
-          <a
-            href="#music"
-            className="relative mt-12 border border-zinc-800 px-6 py-3 text-xs tracking-widest text-zinc-300 hover:border-neon hover:text-neon transition-colors"
-          >
-            LISTEN ↓
-          </a>
-        </section>
+        <Hero />
 
-        <Section id="about" eyebrow="BACKGROUND" title="The work speaks for itself." className="bg-panel border-y border-zinc-900">
-          <div className="max-w-4xl space-y-6 text-zinc-400 text-sm md:text-base leading-relaxed font-sans">
-            {about.map((p, i) => <p key={i}>{p}</p>)}
-          </div>
-        </Section>
+        {/* Slides up over the end of the pinned hero; the soft edge above it
+            blends into the fading starfield instead of a hard line. */}
+        <div className="relative z-10" style={{ marginTop: `-${SCROLL.overlapVh}svh` }}>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-full bg-linear-to-b from-transparent to-panel"
+            style={{ height: `${SCROLL.edgeVh}svh` }}
+          />
+          <About />
+        </div>
 
-        <Section id="arsenal" eyebrow="WORKSTATIONS" title="The digital arsenal">
+        <Section id="arsenal" eyebrow="Studio" title="Tools of the trade">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {software.map((s) => (
               <div
                 key={s}
-                className="p-6 bg-zinc-900 border border-zinc-800 text-center font-bold text-xs tracking-wider uppercase text-zinc-300 hover:text-neon hover:border-neon transition-colors"
+                className="px-5 py-6 border border-zinc-800 rounded-2xl text-center text-sm text-zinc-300 hover:text-white hover:border-accent/60 transition-colors"
               >
                 {s}
               </div>
@@ -45,44 +35,44 @@ export default function App() {
           </div>
         </Section>
 
-        <Section id="music" eyebrow="DISCOGRAPHY" title="Featured audio work" className="bg-panel border-t border-zinc-900">
+        <Section id="music" eyebrow="Music" title="Selected work" className="bg-panel border-t border-zinc-900">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {tracks.map((t) => (
-              <article key={t.title} className="glow-card p-6 bg-black border border-zinc-800 transition-all duration-300 flex flex-col justify-between gap-6 min-h-44">
+              <article key={t.title} className="glow-card p-6 md:p-8 bg-black border border-zinc-800 rounded-2xl transition-all duration-300 flex flex-col justify-between gap-6 min-h-44">
                 <div>
                   <div className="flex justify-between items-start gap-4">
-                    <h3 className="text-lg font-bold uppercase tracking-wide text-white">{t.title}</h3>
+                    <h3 className="text-2xl font-normal text-white">{t.title}</h3>
                     {t.badge && (
-                      <span className="bg-neon text-black text-[10px] font-bold uppercase px-2 py-0.5 shrink-0">{t.badge}</span>
+                      <span className="border border-accent/50 text-accent text-xs px-3 py-1 rounded-full shrink-0">{t.badge}</span>
                     )}
                   </div>
-                  <p className="text-zinc-500 text-xs uppercase mt-2">{t.note}</p>
+                  <p className="text-zinc-400 text-sm mt-2">{t.note}</p>
                 </div>
                 <a
                   href={t.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full text-center bg-zinc-900 text-zinc-300 hover:bg-neon hover:text-black border border-zinc-800 text-xs font-bold py-3 transition-colors tracking-widest"
+                  className="self-start rounded-full border border-zinc-700 px-5 py-2.5 text-sm text-zinc-200 hover:bg-accent hover:border-accent hover:text-black transition-colors"
                 >
-                  STREAM ON SOUNDCLOUD
+                  Listen on SoundCloud ↗
                 </a>
               </article>
             ))}
           </div>
         </Section>
 
-        <Section id="experience" eyebrow="TIMELINE" title="Studio & history">
+        <Section id="experience" eyebrow="Experience" title="Studio & history">
           <div className="space-y-6">
             {experience.map((e) => (
               <div
                 key={e.org}
-                className={`p-6 bg-zinc-900/40 border-l-4 ${e.current ? 'border-neon' : 'border-zinc-800'} flex flex-col md:flex-row justify-between items-start md:items-center`}
+                className={`py-6 border-t border-zinc-800 flex flex-col md:flex-row justify-between items-start md:items-baseline gap-2`}
               >
                 <div>
-                  <h3 className="font-bold text-sm text-white uppercase">{e.org}</h3>
-                  <p className="text-xs text-zinc-400 mt-1">{e.role}</p>
+                  <h3 className="text-xl text-white">{e.org}</h3>
+                  <p className="text-sm text-zinc-400 mt-1">{e.role}</p>
                 </div>
-                <span className="text-xs text-zinc-500 uppercase mt-2 md:mt-0">[ {e.when} ]</span>
+                <span className="text-sm text-zinc-500">{e.when}</span>
               </div>
             ))}
           </div>
@@ -91,8 +81,8 @@ export default function App() {
         <Contact />
       </main>
 
-      <footer className="border-t border-zinc-900 py-8 px-6 text-center text-[10px] tracking-widest text-zinc-600">
-        © {new Date().getFullYear()} {profile.name.toUpperCase()} // OXY
+      <footer className="border-t border-zinc-900 py-10 px-6 text-center text-xs text-zinc-600">
+        © {new Date().getFullYear()} {profile.name} · Oxy
       </footer>
     </>
   )

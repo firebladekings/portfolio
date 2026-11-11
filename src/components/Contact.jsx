@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { profile } from '../data'
 
 const field =
-  'w-full bg-zinc-950 border border-zinc-800 p-4 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-neon'
+  'w-full bg-transparent border-b border-zinc-800 px-1 py-4 text-base text-white placeholder:text-zinc-600 focus:outline-none focus:border-accent transition-colors'
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
@@ -17,22 +17,22 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="scroll-mt-20 py-24 md:py-32 px-6 md:px-24 bg-black">
+    <section id="contact" className="py-24 md:py-36 px-6 md:px-24 bg-black">
       <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-4 text-white">
+        <h2 className="text-4xl md:text-6xl font-light tracking-tight mb-5 text-white">
           Let&apos;s build something together.
         </h2>
-        <p className="text-xs text-zinc-500 mb-12">GET IN TOUCH FOR PROJECTS &amp; COLLABORATIONS</p>
+        <p className="text-zinc-400 mb-14">Projects, collaborations, or just to say hello.</p>
 
-        <form onSubmit={submit} className="space-y-4 text-left">
-          <input name="name" required placeholder="YOUR NAME" value={form.name} onChange={update} className={field} />
-          <input name="email" type="email" required placeholder="YOUR EMAIL" value={form.email} onChange={update} className={field} />
-          <textarea name="message" required rows={5} placeholder="YOUR MESSAGE" value={form.message} onChange={update} className={`${field} resize-y`} />
+        <form onSubmit={submit} className="space-y-2 text-left">
+          <input name="name" required placeholder="Your name" value={form.name} onChange={update} className={field} />
+          <input name="email" type="email" required placeholder="Your email" value={form.email} onChange={update} className={field} />
+          <textarea name="message" required rows={5} placeholder="Tell me about the project" value={form.message} onChange={update} className={`${field} resize-y`} />
           <button
             type="submit"
-            className="w-full bg-neon text-black text-xs font-bold py-4 tracking-widest hover:bg-white transition-colors"
+            className="mt-6 rounded-full bg-accent text-black font-medium px-8 py-4 hover:opacity-80 transition-colors"
           >
-            SEND MESSAGE
+            Send message
           </button>
         </form>
       </div>

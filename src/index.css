@@ -1,7 +1,31 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Outfit';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/Outfit-latin-300-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Outfit';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Outfit-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Outfit';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Outfit-latin-500-normal.woff2') format('woff2');
+}
+
 @theme {
-  --color-neon: #39ff14;
+  --font-outfit: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  /* Theme accent: change this one value to re-theme the page
+     (and THEME.accent in src/hero/config.js for the 3D hero). */
+  --color-accent: #ffffff;
   --color-void: #030303;
   --color-panel: #0a0a0c;
 }
@@ -11,14 +35,167 @@ html {
 }
 
 body {
-  @apply bg-void text-zinc-100 font-mono overflow-x-hidden;
+  @apply bg-void text-zinc-100 font-outfit font-light overflow-x-hidden;
 }
 
 ::selection {
-  @apply bg-neon text-black;
+  @apply bg-accent text-black;
+}
+
+/* Deep-space backdrop behind the transparent hero canvas. */
+.space-bg {
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 48%, color-mix(in srgb, var(--color-accent) 4%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 85% 20%, rgba(124, 92, 255, 0.09), transparent 70%),
+    radial-gradient(ellipse 45% 50% at 10% 85%, rgba(20, 120, 255, 0.06), transparent 70%),
+    var(--color-void);
+}
+
+/* ---------- Section bubbles around "OXY" (hero/SectionBubbles.jsx) ---------- */
+
+.bubbles {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+/* Each slot springs from the title's centre out to its spot on the arc. */
+.bubble-slot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transform: translate(-50%, -50%) scale(0.25);
+  transition:
+    transform 0.45s cubic-bezier(0.5, 0, 0.75, 0),
+    opacity 0.3s ease;
+}
+.bubbles[data-open] .bubble-slot {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1);
+  transition:
+    transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) var(--delay),
+    opacity 0.35s ease var(--delay);
+}
+.bubble-slot:focus-visible {
+  outline: none;
+}
+.bubble-slot:focus-visible .bubble {
+  box-shadow:
+    inset 0 0 14px rgba(255, 255, 255, 0.1),
+    0 0 0 2px var(--color-accent);
+}
+
+/* Gentle independent bobbing. */
+.bubble-float {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: bubble-bob 3s ease-in-out infinite;
+}
+@keyframes bubble-bob {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33% { transform: translate3d(2px, -6px, 0); }
+  66% { transform: translate3d(-2px, -3px, 0); }
+}
+
+/* The soap film: clear centre, soft highlight, faint tint near the rim. */
+.bubble {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  font-family: var(--font-outfit);
+  font-weight: 400;
+  font-size: calc(var(--size) * 0.155);
+  letter-spacing: 0.04em;
+  color: #f4f4f5;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0) 20%),
+    radial-gradient(circle at 70% 78%, color-mix(in srgb, var(--color-accent) 9%, transparent), transparent 42%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.015) 52%, rgba(255, 255, 255, 0.07) 72%, rgba(124, 92, 255, 0.16) 100%);
+  backdrop-filter: blur(5px) saturate(150%);
+  -webkit-backdrop-filter: blur(5px) saturate(150%);
+  box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.07);
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.3s ease,
+    box-shadow 0.4s ease;
+}
+/* Iridescent rim that slowly turns, like light sliding over a real bubble. */
+.bubble::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: conic-gradient(from 0deg, var(--color-accent), #3ad7ff, #7c5cff, #ff7ad9, #ffd36e, var(--color-accent));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.55;
+  animation: bubble-spin 9s linear infinite;
+  transition: opacity 0.3s ease;
+}
+@keyframes bubble-spin {
+  to { transform: rotate(360deg); }
+}
+.bubble-slot:hover .bubble {
+  transform: scale(1.1);
+  color: #fff;
+  box-shadow:
+    inset 0 0 18px rgba(255, 255, 255, 0.1),
+    0 0 22px color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+.bubble-slot:hover .bubble::before {
+  opacity: 0.9;
+}
+
+/* Click: the bubble swells and bursts before the page moves. */
+.bubble-slot.is-popping .bubble {
+  animation: bubble-pop 0.32s ease-out forwards;
+}
+@keyframes bubble-pop {
+  40% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble-float,
+  .bubble::before {
+    animation: none;
+  }
+}
+
+/* Scroll-in reveal (see components/Reveal.jsx). */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-shown {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .glow-card:hover {
-  box-shadow: 0 0 25px rgba(57, 255, 20, 0.2);
-  border-color: var(--color-neon);
+  box-shadow: 0 0 25px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  border-color: var(--color-accent);
 }
