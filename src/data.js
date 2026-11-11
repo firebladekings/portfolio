@@ -24,6 +24,13 @@ export const sections = [
 // Phrase from the bio that gets picked out in the About section.
 export const aboutHighlight = 'music is about action rather than conversation'
 
+export const aboutPhoto = {
+  src: '/images/akul-studio.jpg',
+  alt: 'Akul Sanjeev Rao in the studio, arms crossed beside the mixing desk',
+  width: 937,
+  height: 1171,
+}
+
 export const aboutFacts = [
   { label: 'Education', value: 'B.Sc Sound Engineering' },
   { label: 'Award', value: '1st Place, Ableton Producer Challenge' },

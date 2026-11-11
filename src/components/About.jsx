@@ -1,6 +1,6 @@
 import Reveal from './Reveal'
 import Eyebrow from './Eyebrow'
-import { about, aboutFacts, aboutHighlight } from '../data'
+import { about, aboutFacts, aboutHighlight, aboutPhoto } from '../data'
 
 /** Renders text with one phrase picked out in white. */
 function withHighlight(text, phrase) {
@@ -21,11 +21,29 @@ export default function About() {
   return (
     <section id="about" className="bg-panel px-6 md:px-16 lg:px-24 pt-24 md:pt-36 pb-28 md:pb-40 font-outfit">
       <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-x-12 gap-y-10">
-        <Reveal className="md:col-span-3">
-          <Eyebrow className="md:pt-4">About</Eyebrow>
-        </Reveal>
+        {/* Label + portrait. */}
+        <div className="md:col-span-4">
+          <div>
+            <Reveal>
+              <Eyebrow className="md:pt-4">About</Eyebrow>
+            </Reveal>
+            <Reveal as="figure" delay={150} className="mt-8 max-w-sm md:max-w-none">
+              <div className="group overflow-hidden rounded-2xl border border-zinc-800/80">
+                <img
+                  src={aboutPhoto.src}
+                  alt={aboutPhoto.alt}
+                  width={aboutPhoto.width}
+                  height={aboutPhoto.height}
+                  loading="lazy"
+                  decoding="async"
+                  className="block w-full h-auto transition-transform duration-1600 ease-out group-hover:scale-[1.03]"
+                />
+              </div>
+            </Reveal>
+          </div>
+        </div>
 
-        <div className="md:col-span-9">
+        <div className="md:col-span-8">
           <Reveal as="h2" className="text-4xl sm:text-5xl lg:text-7xl font-light tracking-tight leading-[1.02] text-white">
             The work <span className="text-zinc-500">speaks for itself.</span>
           </Reveal>
