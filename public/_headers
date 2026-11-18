@@ -1,0 +1,13 @@
+# Netlify response headers (Vite copies this into dist/ at build time).
+#
+# Content-Security-Policy
+# - No 'unsafe-inline' in script-src: this is what stops Netlify's injected
+#   "Powered by Netlify" badge from rendering (it runs as an inline script in
+#   an iframe). See https://docs.netlify.com/manage/projects/powered-by-netlify-badge/
+# - 'self': the app's own bundle in /assets.
+# - blob: the 3D "OXY" title (troika-three-text) lays out text in Web Workers it
+#   creates from blob: URLs and loads code into with importScripts(blob:).
+#   Without it the whole 3D hero fails to render. worker-src alone is not
+#   enough, because importScripts inside the worker is checked against script-src.
+/*
+  Content-Security-Policy: script-src 'self' blob:
